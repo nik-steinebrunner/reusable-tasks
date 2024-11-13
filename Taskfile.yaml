@@ -1,0 +1,44 @@
+version: "3"
+
+# includes:
+#   checks:
+#     taskfile: ./reusable-tasks/checks/Taskfile.yaml
+#     flatten: true
+
+output:
+  group:
+    begin: |
+
+      🔧 [TASK:] {{.TASK_NAME | default .TASK}}
+    end: ""
+
+tasks:
+  default:
+    desc: Show this help message
+    aliases:
+      - "help"
+    cmds:
+      - task --list-all
+
+  main:preconds:
+    silent: true
+    preconditions:
+      - sh: command -v docker 2>/dev/null
+        msg: "❌ [ERROR:] docker isn't installed. Abort"
+    cmds:
+      - |
+        TASK_VERSION=($(task --version | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | tr '.' ' '))
+        if [[ ${TASK_VERSION[0]} -lt 3 ]]; then
+          printf "❌ [ERROR:] Please update task. At least the version 3.25.0 is needed. Abort."
+          exit 1
+        elif [[ ${TASK_VERSION[0]} -eq 3 ]] && [[ ${TASK_VERSION[1]} -lt 25 ]]; then
+          printf "❌ [ERROR:] Please update task. At least the version 3.25.0 is needed. Abort."
+          exit 1
+        fi
+
+  main:init:
+    desc: Initialize working environment
+    silent: true
+    interactive: true
+    deps:
+      - main:preconds

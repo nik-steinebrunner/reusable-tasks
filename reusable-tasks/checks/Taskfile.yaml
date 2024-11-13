@@ -1,0 +1,18 @@
+version: "3"
+
+tasks:
+  checks:task-version:
+    desc: check Task (binary) version
+    run: once
+    silent: true
+    cmds:
+      - |
+        TASK_VERSION=($(task --version | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | tr '.' ' '))
+        if [[ ${TASK_VERSION[0]} -lt 3 ]]; then
+          printf "❌ [ERROR:] Please update task. At least the version 3.25.0 is needed. Abort."
+          exit 1
+        elif [[ ${TASK_VERSION[0]} -eq 3 ]] && [[ ${TASK_VERSION[1]} -lt 25 ]]; then
+          printf "❌ [ERROR:] Please update task. At least the version 3.25.0 is needed. Abort."
+          exit 1
+        fi
+        printf "🔔 [INFO:] task is already installed in version $(task --version)\n"
