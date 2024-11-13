@@ -42,3 +42,5 @@ tasks:
     interactive: true
     deps:
       - main:preconds
+    cmds:
+      - printf "🔔 [INFO:] Installed Main Taskfile\n"
