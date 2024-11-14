@@ -4,6 +4,7 @@ includes:
   checks:
     taskfile: ./reusable-tasks/checks/Taskfile.yaml
     flatten: true
+    optional: true
 
 output:
   group:
